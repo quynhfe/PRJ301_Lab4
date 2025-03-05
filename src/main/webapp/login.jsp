@@ -60,40 +60,15 @@
     </style>
 </head>
 <body>
-    <%
-        String username = "";
-        String password = "";
-        boolean rememberMe = false;
-
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("username".equals(cookie.getName())) {
-                    username = cookie.getValue();
-                } else if ("password".equals(cookie.getName())) {
-                    password = cookie.getValue();
-                } else if ("remember".equals(cookie.getName())) {
-                    rememberMe = true;
-                }
-            }
-        }
-
-        if (request.getParameter("logout") != null) {
-            username = "";
-            password = "";
-            rememberMe = false;
-        }
-    %>
-
     <form action="loginServlet" method="post">
         <label for="username"> Username: </label>
-        <input type="text" name="username" id="username" value="<%= username %>" required><br>
+        <input type="text" name="username" id="username" value="${username}" required><br>
 
         <label for="password"> Password: </label>
-        <input type="password" name="password" id="password" value="<%= password %>" required><br>
+        <input type="password" name="password" id="password" value="${password}" required><br>
 
         <div class="checkbox">
-            <input type="checkbox" name="rememberaccount" id="rememberaccount" <%= rememberMe ? "checked" : "" %>>
+            <input type="checkbox" name="rememberaccount" id="rememberaccount"} >
             <label id="remember" for="rememberaccount" style="color: teal"> Remember me</label> <br>
         </div>
 

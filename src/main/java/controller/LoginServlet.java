@@ -38,10 +38,31 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String username = "";
+        String password = "";
+        Cookie[] cookies = request.getCookies();
+        for(Cookie c: cookies){
+            System.out.println(c.toString());
+            if(c.getName().equals("username")){
+                username = c.getValue();
+            }
+            
+            if(c.getName().equals("password")){
+                password = c.getValue();
+            }
+        }
+        request.setAttribute("username", username);
+        request.setAttribute("password", password);
+        request.getRequestDispatcher("login.jsp").forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String remember = request.getParameter("rememberaccount");
-
+        System.out.println(remember);
         if (remember != null) {
             Cookie userCookie = new Cookie("username", username);
             Cookie passCookie = new Cookie("password", password);
@@ -62,16 +83,7 @@ public class LoginServlet extends HttpServlet {
 
         request.setAttribute("username", username);
         request.setAttribute("password", password);
-        request.setAttribute("remember", remember);
-
-        response.sendRedirect("displayName?username=" + username);
-
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doGet(request, response);
+        request.getRequestDispatcher("detail.jsp").forward(request, response);
     }
 
     @Override

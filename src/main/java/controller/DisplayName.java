@@ -40,10 +40,9 @@ public class DisplayName extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
-        if ("back".equals(action)) {
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-            return;
-        } else if ("logout".equals(action)) {
+        System.out.println(action);
+        if(action.equalsIgnoreCase("logout")){
+            System.out.println("vao logout");
             Cookie[] cookies = request.getCookies();
             if (cookies != null) {
                 for (Cookie cookie : cookies) {
@@ -60,21 +59,40 @@ public class DisplayName extends HttpServlet {
             }
             response.sendRedirect("login.jsp");
             return;
-        } else {
-            String username = request.getParameter("username");
-            if (username != null && !username.isEmpty()) {
-                request.setAttribute("username", username);
-                request.getRequestDispatcher("detail.jsp").forward(request, response);
-            } else {
-                response.sendRedirect("login.jsp");
-            }
+        }else if(action.equalsIgnoreCase("back")){
+            response.sendRedirect("loginServlet");
         }
+        
+        
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doGet(request, response);
+        String action = request.getParameter("action");
+        System.out.println(action);
+        if (action.equalsIgnoreCase("back")) {
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+            return;
+        } else if (action.equalsIgnoreCase("logout")) {
+            System.out.println("vao logout");
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("username".equals(cookie.getName()) || "password".equals(cookie.getName()) || "remember".equals(cookie.getName())) {
+                        cookie.setMaxAge(0);
+                        cookie.setPath("/");
+                        response.addCookie(cookie);
+                    }
+                }
+            }
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                session.invalidate();
+            }
+            response.sendRedirect("login.jsp");
+            return;
+        }
     }
 
     @Override
